@@ -1,0 +1,126 @@
+<!doctype html>
+<html lang="pt-BR"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Fluxen">
+<meta name="theme-color" content="#3346f0">
+<title>Fluxen</title>
+<link href="https://fonts.googleapis.com/css2?family=Schibsted+Grotesk:wght@400;600;800&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#f4f5fa;--sf:#fff;--tx:#12162b;--mu:#6a7090;--ln:#e6e8f2;--hero:#3346f0;--ac:#3346f0;--g:#0f9d76;--r:#e8453c;--y:#b57e00}
+@media(prefers-color-scheme:dark){:root{--bg:#0a0d1a;--sf:#141930;--tx:#eceefb;--mu:#8e94b8;--ln:#232a4a;--hero:#2b3bd1;--ac:#8c98ff;--g:#2fd0a1;--r:#ff6f66;--y:#f0b73a}}
+*{box-sizing:border-box}
+body{margin:0;font:16px/1.4 'Schibsted Grotesk',system-ui,sans-serif;background:var(--bg);color:var(--tx);font-variant-numeric:tabular-nums;padding-bottom:calc(100px + env(safe-area-inset-bottom))}
+.hero{background:var(--hero);color:#fff;padding:calc(14px + env(safe-area-inset-top)) 20px 26px;border-radius:0 0 32px 32px}
+.hero.neg{background:#b92f27}
+.hero h1,.hero h2{margin:18px 0 0;font-size:30px;font-weight:800;letter-spacing:-.03em}
+.mes{display:flex;gap:8px;overflow-x:auto;scrollbar-width:none;margin:0 -20px;padding:0 20px 2px}.mes::-webkit-scrollbar{display:none}
+.mes button{width:auto;flex:none;margin:0;padding:7px 15px;border-radius:99px;background:rgba(255,255,255,.16);color:#fff;font-size:14px;font-weight:600}
+.mes .on{background:#fff;color:var(--hero)}
+.lb{margin:24px 0 0;opacity:.8;font-size:14px}
+.hero .big{margin:2px 0 20px;font-size:clamp(40px,13vw,58px);line-height:1.04;letter-spacing:-.045em}
+.flow{height:14px;border-radius:99px;background:rgba(255,255,255,.3);overflow:hidden}
+.flow i{display:block;height:100%;border-radius:99px;background:#ff8f86;transition:width .9s cubic-bezier(.2,.8,.2,1)}
+.fl{display:flex;justify-content:space-between;margin-top:9px;font-size:14px;opacity:.95}.fl b{display:block;font-size:18px}
+.stats{display:flex;padding:20px 20px 2px}.stats>div{flex:1}.stats>div+div{padding-left:18px;border-left:1px solid var(--ln)}
+.stats b{font-size:22px;font-weight:800;letter-spacing:-.02em}
+.sheet{padding:16px 16px 0;display:grid;gap:12px}
+.sheet>h3{margin:10px 4px 0;font-size:18px}
+small{display:block;color:var(--mu);font-size:13px}
+.g{color:var(--g)}.r{color:var(--r)}.y{color:var(--y)}.m{color:var(--mu);margin:6px 0 0;font-size:14px}.tg{color:var(--ac)}
+.lst{background:var(--sf);border-radius:24px;padding:2px 16px}
+.lst details{padding:13px 0;border-bottom:1px solid var(--ln)}.lst details:last-child{border:0}
+summary{display:flex;align-items:center;gap:12px;list-style:none;cursor:pointer}summary::-webkit-details-marker{display:none}
+summary::after{content:'›';color:var(--mu);font-size:24px;line-height:1;transition:transform .2s}details[open] summary::after{transform:rotate(90deg)}
+.bd{width:38px;height:38px;border-radius:50%;color:#fff;display:grid;place-items:center;font-weight:800;flex:none}
+.gr{flex:1;display:grid;gap:7px;min-width:0}
+.tk{height:6px;border-radius:9px;background:var(--ln);overflow:hidden}.tk i{display:block;height:100%;border-radius:9px;transition:width .8s cubic-bezier(.2,.8,.2,1)}
+.sub{display:flex;justify-content:space-between;padding:9px 0 0 50px;color:var(--mu);font-size:15px}
+.dia{margin:8px 4px 0;color:var(--mu);font-size:13px;font-weight:600}
+.row2{display:flex;align-items:center;gap:12px;background:var(--sf);border-radius:18px;padding:12px 14px;cursor:pointer}
+.nm{flex:1;min-width:0}.nm b{display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.rt{text-align:right}
+.c2{background:var(--sf);border-radius:24px;padding:16px}
+.c2 .row2{background:none;border-radius:0;border-bottom:1px solid var(--ln);padding:10px 0}
+h3{margin:0 0 8px}
+input,select,button{font:inherit;width:100%;padding:12px 14px;margin:5px 0;border-radius:14px;border:0;background:var(--bg);color:var(--tx)}
+button{cursor:pointer;font-weight:600}.pri{background:var(--hero);color:#fff;font-weight:700}.del{color:var(--r)}
+.warn{background:color-mix(in srgb,var(--ac) 15%,transparent);color:var(--ac);text-align:left;margin:0}
+.row2 button{width:auto;padding:4px 12px;margin:0}
+.chip{display:flex;gap:8px;align-items:center;color:var(--mu)}.chip input{width:auto;margin:0}
+label{display:block;color:var(--mu);font-size:14px;margin-top:8px}
+nav{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(12px + env(safe-area-inset-bottom));width:min(92%,400px);display:flex;gap:4px;background:var(--tx);border-radius:26px;padding:6px;z-index:5;box-shadow:0 10px 30px rgba(10,13,40,.28)}
+nav button{flex:1;display:grid;justify-items:center;gap:2px;margin:0;padding:8px 4px;border-radius:20px;background:none;color:var(--bg);opacity:.55;font-size:11px;transition:background .25s,opacity .25s}
+nav .on{opacity:1;background:rgba(128,128,160,.3)}
+.ov{position:fixed;inset:0;background:rgba(5,8,25,.5);display:flex;align-items:flex-end;z-index:9}
+.md{background:var(--sf);width:100%;border-radius:28px 28px 0 0;padding:20px 18px calc(18px + env(safe-area-inset-bottom));max-height:88vh;overflow:auto}
+button:focus-visible,input:focus-visible,select:focus-visible,summary:focus-visible{outline:2px solid var(--ac);outline-offset:2px}
+@media(prefers-reduced-motion:reduce){*{transition:none!important}}
+</style></head><body><div id="app"></div>
+<script>
+const U="https://zlrdsnvlleepwayzplew.supabase.co",K="COLE_AQUI_A_PUBLISHABLE_KEY";
+const $=s=>document.querySelector(s),
+esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c])),
+br=t=>new Date(t).toLocaleString('sv-SE',{timeZone:'America/Sao_Paulo'}),
+R=v=>Number(v).toLocaleString('pt-BR',{style:'currency',currency:'BRL'}),
+num=s=>parseFloat(String(s).trim().replace(/\./g,'').replace(',','.')),
+clean=n=>n.replace(/\s*\d{1,2}[A-Za-z]{3}\s+\d{1,2}h\d{2}(min)?\s*$/,'').replace(/\s*\d{1,2}\/\d{1,2}\s+\d{1,2}:\d{2}\s*$/,'').trim(),
+iso=s=>new Date(s.trim().replace(' ','T')+':00-03:00').toISOString(),
+mk=t=>br(t.occurred_at).slice(0,7),now=()=>br(new Date()).slice(0,7),
+nm=k=>{const[y,m]=k.split('-');return['jan','fev','mar','abr','mai','jun','jul','ago','set','out','nov','dez'][m-1]+' '+y};
+let ses=null;try{ses=JSON.parse(localStorage.getItem('fx'))}catch(e){}
+const S={tx:[],cats:[],rules:[],tab:'r',month:now(),f:0,edit:null};
+function save(j){ses={at:j.access_token,rt:j.refresh_token,exp:j.expires_at||Math.floor(Date.now()/1e3)+j.expires_in};localStorage.setItem('fx',JSON.stringify(ses))}
+async function tok(){if(!ses)return null;if(ses.exp-60<Date.now()/1e3){const r=await fetch(U+'/auth/v1/token?grant_type=refresh_token',{method:'POST',headers:{apikey:K,'Content-Type':'application/json'},body:JSON.stringify({refresh_token:ses.rt})});if(!r.ok){ses=null;localStorage.removeItem('fx');return null}save(await r.json())}return ses.at}
+async function api(p,o={}){const t=await tok();if(!t)throw new Error('Faça login novamente.');const r=await fetch(U+'/rest/v1/'+p,{...o,headers:{apikey:K,Authorization:'Bearer '+t,'Content-Type':'application/json',Prefer:'return=minimal',...(o.headers||{})}});const x=await r.text();if(!r.ok)throw new Error(x);return x?JSON.parse(x):null}
+async function all(t){let o=[],i=0,n;do{n=await api(`${t}?select=*&order=id&limit=1000&offset=${i}`);o=o.concat(n);i+=1000}while(n.length==1000);return o}
+async function load(){[S.tx,S.cats,S.rules]=await Promise.all([all('transactions'),all('categories'),all('rules')]);draw()}
+async function login(){const r=await fetch(U+'/auth/v1/token?grant_type=password',{method:'POST',headers:{apikey:K,'Content-Type':'application/json'},body:JSON.stringify({email:$('#em').value.trim(),password:$('#pw').value})});const j=await r.json();if(!r.ok)return $('#er').textContent='E-mail ou senha incorretos.';save(j);load().catch(e=>alert(e.message))}
+function out(){localStorage.removeItem('fx');ses=null;draw()}
+function cls(t){const n=clean(t.name),a=Number(t.amount),d=br(t.occurred_at).slice(0,16);let b=null,bs=0;for(const r of S.rules){if(r.name!==n)continue;let s=1;if(r.amount!=null){if(Math.abs(r.amount-a)>.001)continue;s=2}if(r.occurred_at){if(br(r.occurred_at).slice(0,16)!==d)continue;s=3}if(s>bs){b=r;bs=s}}return b?[b.category,b.subcategory]:null}
+function calc(){const m={};for(const t of S.tx){const o=m[mk(t)]??={e:0,s:0,g:0},v=Number(t.amount);if(t.type=='entrada')o.e+=v;else if(t.type=='saida')o.s+=v;else o.g+=v}return m}
+
+const hue=n=>[...n].reduce((h,x)=>(h*31+x.charCodeAt(0))%360,7),W=(v,x='')=>`data-w="${v}" style="width:${v}%;${x}"`;
+const hd=()=>`<div class="mes">${[...new Set([now(),S.month,...S.tx.map(mk)])].sort().reverse().map(k=>`<button class="${k==S.month?'on':''}" onclick="S.month='${k}';draw()">${nm(k)}</button>`).join('')}</div>`;
+const ic={r:'<rect x="4" y="4" width="7" height="7" rx="2"/><rect x="13" y="4" width="7" height="7" rx="2"/><rect x="4" y="13" width="7" height="7" rx="2"/><rect x="13" y="13" width="7" height="7" rx="2"/>',t:'<path d="M5 7h14M5 12h14M5 17h9"/>',c:'<path d="M4 8h8M17 8h3M4 16h3M12 16h8"/><circle cx="14.5" cy="8" r="2.5"/><circle cx="9.5" cy="16" r="2.5"/>'};
+const bar=()=>`<nav>${[['r','Resumo'],['t','Transações'],['c','Config']].map(([k,l])=>`<button class="${S.tab==k?'on':''}" onclick="S.tab='${k}';S.f=0;draw()"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true">${ic[k]}</svg><span>${l}</span></button>`).join('')}</nav>`;
+const loginH=()=>`<div class="hero"><h1>Fluxen</h1></div><div class="sheet"><div class="c2"><input id="em" type="email" placeholder="E-mail" autocomplete="username"><input id="pw" type="password" placeholder="Senha" autocomplete="current-password"><button class="pri" onclick="login()">Entrar</button><p class="m" id="er"></p></div></div>`;
+function resumo(){const m=calc(),k=S.month,o=m[k]||{e:0,s:0,g:0},sal=o.e-o.s,fe=k<now();let gt=0;for(const x in m){gt+=m[x].g;if(x<now())gt+=m[x].e-m[x].s}
+const cat={};let sem=0;for(const t of S.tx)if(mk(t)==k&&t.type=='saida'){const c=cls(t),a=c?c[0]:'Sem categoria',b=c?c[1]:'—',v=+t.amount;const x=cat[a]??={v:0,s:{}};x.v+=v;x.s[b]=(x.s[b]||0)+v;if(!c)sem++}
+const lista=Object.entries(cat).sort((a,b)=>b[1].v-a[1].v).map(([n,c])=>{const col=`hsl(${hue(n)} 55% 45%)`;return `<details><summary><span class="bd" style="background:${col}">${esc(n[0])}</span><span class="gr"><b>${esc(n)}</b><span class="tk"><i ${W(c.v/o.s*100,'background:'+col)}></i></span></span><b>${R(c.v)}</b></summary>${Object.entries(c.s).sort((a,b)=>b[1]-a[1]).map(([s,v])=>`<div class="sub"><span>${esc(s)}</span><span>${R(v)}</span></div>`).join('')}</details>`}).join('')||'<p class="m" style="padding:14px 0">Nenhum gasto neste mês.</p>';
+const pc=o.e>0?Math.min(100,o.s/o.e*100):(o.s>0?100:0);
+return `<div class="hero ${sal<0?'neg':''}">${hd()}<p class="lb">Saldo de ${nm(k)}</p><h1 class="big">${R(sal)}</h1><div class="flow"><i ${W(pc)}></i></div><div class="fl"><span>Recebido<b>${R(o.e)}</b></span><span style="text-align:right">Gasto<b>${R(o.s)}</b></span></div></div>
+<div class="stats"><div><small>Guardado no mês</small><b class="${fe&&sal<0?'r':'y'}">${fe?R(sal):'A definir'}</b></div><div><small>Guardado no total</small><b class="y">${R(gt)}</b></div></div>
+<div class="sheet">${sem?`<button class="warn" onclick="S.tab='t';S.f=1;draw()">${sem} ${sem>1?'transações sem categoria':'transação sem categoria'}. Classificar agora</button>`:''}<h3>Gastos por categoria</h3><div class="lst">${lista}</div></div>`}
+const row=t=>{const s=t.type=='saida',c=s?cls(t):null,col=c?`hsl(${hue(c[0])} 55% 45%)`:'var(--mu)';return `<div class="row2" onclick="ed(${t.id})"><span class="bd" style="background:${col}">${esc((c?c[0]:clean(t.name))[0]||'?')}</span><div class="nm"><b>${esc(clean(t.name))}</b><small>${s?(c?esc(c[0]+' › '+c[1]):'<span class="tg">Sem categoria</span>'):t.type}</small></div><div class="rt"><b class="${s?'r':t.type=='entrada'?'g':'y'}">${s?'−':''}${R(t.amount)}</b><small>${br(t.occurred_at).slice(11,16)}</small></div></div>`};
+function trans(){const l=S.tx.filter(t=>mk(t)==S.month).sort((a,b)=>b.occurred_at.localeCompare(a.occurred_at)).filter(t=>!S.f||(t.type=='saida'&&!cls(t)));let h='',d='';for(const t of l){const k=br(t.occurred_at).slice(0,10);if(k!=d){d=k;h+=`<h4 class="dia">${+k.slice(8)} de ${nm(k.slice(0,7)).slice(0,3)}</h4>`}h+=row(t)}return `<div class="hero">${hd()}<h2>Transações</h2></div><div class="sheet"><label class="chip"><input type="checkbox" ${S.f?'checked':''} onchange="S.f=this.checked;draw()"> Só sem categoria</label>${h||'<p class="m">Nenhuma transação neste mês.</p>'}</div>`}
+function conf(){return `<div class="hero"><h2>Configurações</h2></div><div class="sheet">
+<div class="c2"><h3>Nova categoria</h3><input id="nc" placeholder="Categoria"><input id="ns" placeholder="Subcategoria (Geral se não tiver)"><button class="pri" onclick="addC()">Criar</button><p class="m">${esc([...new Set(S.cats.map(c=>c.category))].join(', ')||'Nenhuma ainda.')}</p></div>
+<div class="c2"><h3>Lançamento manual</h3><select id="mt"><option value="saida">Saída</option><option value="entrada">Entrada</option><option value="guardado">Guardado</option></select><input id="mv" inputmode="decimal" placeholder="Valor (ex.: 150,00)"><input id="mn" placeholder="Nome ou descrição"><button class="pri" onclick="addM()">Lançar</button></div>
+<div class="c2"><h3>Regras (${S.rules.length})</h3>${S.rules.map(r=>`<div class="row2"><small>${esc(r.name)}${r.amount!=null?' · '+R(r.amount):''}${r.occurred_at?' · '+br(r.occurred_at).slice(0,10):''} → ${esc(r.category+' › '+r.subcategory)}</small><button onclick="delR(${r.id})">×</button></div>`).join('')||'<p class="m">Nenhuma ainda.</p>'}</div>
+<div class="c2"><h3>Importar histórico</h3><p class="m">Escolha transacoes.txt, categorias.txt e opcoes.txt de uma vez. Faça isso uma única vez.</p><input type="file" id="fi" multiple><button class="pri" onclick="imp()">Importar</button></div>
+<button onclick="out()">Sair</button></div>`}
+function sheet(){const t=S.edit,s=t.type=='saida';return `<div class="ov" onclick="if(event.target==this){S.edit=null;draw()}"><div class="md"><h3>${esc(clean(t.name))}</h3><p class="m">${R(t.amount)} · ${br(t.occurred_at).slice(0,16)}</p>${s?`<label>Categoria<select id="ec">${S.cats.map((c,i)=>`<option value="${i}">${esc(c.category+' › '+c.subcategory)}</option>`).join('')}</select></label><label>Vale para<select id="es"><option value="0">Todas as compras deste nome</option><option value="1">Este nome com este valor</option><option value="2">Só esta transação</option></select></label><button class="pri" onclick="saveR()">Salvar classificação</button>`:''}<button class="del" onclick="delT()">Apagar lançamento</button><button onclick="S.edit=null;draw()">Fechar</button></div></div>`}
+function draw(){const a=$('#app');if(!ses){a.innerHTML=loginH();return}const key=S.tab+S.month,first=key!=S.k;S.k=key;a.innerHTML=({r:resumo,t:trans,c:conf})[S.tab]()+bar()+(S.edit?sheet():'');if(first){const w=a.querySelectorAll('[data-w]');w.forEach(e=>e.style.width='0');requestAnimationFrame(()=>requestAnimationFrame(()=>w.forEach(e=>e.style.width=e.dataset.w+'%')))}}
+const ed=id=>{S.edit=S.tx.find(t=>t.id==id);draw()};
+const run=async f=>{try{await f()}catch(e){alert(e.message)}};
+const saveR=()=>run(async()=>{const t=S.edit,c=S.cats[$('#ec').value],e=+$('#es').value;if(!c)return alert('Crie uma categoria antes, em Config.');
+const r={name:clean(t.name),amount:e?+t.amount:null,occurred_at:e==2?t.occurred_at:null,category:c.category,subcategory:c.subcategory};
+const same=S.rules.filter(x=>x.name==r.name&&(x.amount==null)==(r.amount==null)&&(r.amount==null||Math.abs(x.amount-r.amount)<.001)&&(!x.occurred_at)==(!r.occurred_at)&&(!r.occurred_at||br(x.occurred_at)==br(r.occurred_at)));
+if(same.length)await api('rules?id=in.('+same.map(x=>x.id).join(',')+')',{method:'DELETE'});
+await api('rules',{method:'POST',body:JSON.stringify(r)});S.edit=null;await load()});
+const delT=()=>run(async()=>{if(!confirm('Apagar este lançamento?'))return;await api('transactions?id=eq.'+S.edit.id,{method:'DELETE'});S.edit=null;await load()});
+const delR=id=>run(async()=>{await api('rules?id=eq.'+id,{method:'DELETE'});await load()});
+const addC=()=>run(async()=>{const c=$('#nc').value.trim();if(!c)return alert('Digite o nome da categoria.');await api('categories?on_conflict=user_id,category,subcategory',{method:'POST',headers:{Prefer:'resolution=ignore-duplicates,return=minimal'},body:JSON.stringify({category:c,subcategory:$('#ns').value.trim()||'Geral'})});await load()});
+const addM=()=>run(async()=>{const ty=$('#mt').value;let v=num($('#mv').value);const n=$('#mn').value.trim();if(isNaN(v)||!n)return alert('Preencha o valor e o nome.');if(ty!='guardado')v=Math.abs(v);await api('transactions',{method:'POST',body:JSON.stringify({type:ty,amount:v,name:n,source:'manual'})});await load()});
+const imp=()=>run(async()=>{if(S.tx.some(t=>t.source=='importado'))return alert('O histórico já foi importado. Importar de novo duplicaria tudo.');
+let T='',C='',O='';for(const f of $('#fi').files){const n=f.name.toLowerCase(),s=await f.text();if(n.includes('transac'))T=s;else if(n.includes('categorias'))C=s;else if(n.includes('opcoes'))O=s}
+const L=s=>s.split(/\r?\n/).map(l=>l.trim()).filter(Boolean);let bad=0;
+const tx=L(T).map(l=>l.split(';')).filter(p=>p[0]!='data').map(p=>{const ty=p[1].toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,''),v=num(p[2]);let d;try{d=iso(p[0])}catch(e){}if(!['saida','entrada','guardado'].includes(ty)||isNaN(v)||!d||d=='Invalid Date'){bad++;return null}return{occurred_at:d,type:ty,amount:v,name:p.slice(3).join(';'),source:'importado'}}).filter(Boolean);
+const rules=L(C).map(l=>l.split(';')).filter(p=>p[0]!='nome'&&p[1]).map(p=>{const k=p[0].split('|');return{name:k[0],amount:k.length>1?num(k[k.length-1]):null,occurred_at:k.length>2?iso(k[1]):null,category:p[1],subcategory:p[2]||'Geral'}});
+const seen={};for(const p of [...L(O).map(l=>l.split(';')),...rules.map(r=>[r.category,r.subcategory])])if(p[0]&&p[1])seen[p[0]+'|'+p[1]]={category:p[0],subcategory:p[1]};
+const cats=Object.values(seen);
+if(!confirm(`Importar ${tx.length} transações, ${rules.length} regras e ${cats.length} categorias?${bad?`\n${bad} linhas inválidas serão ignoradas.`:''}`))return;
+const post=async(t,rows,h)=>{for(let i=0;i<rows.length;i+=500)await api(t,{method:'POST',headers:h||{},body:JSON.stringify(rows.slice(i,i+500))})};
+await post('categories?on_conflict=user_id,category,subcategory',cats,{Prefer:'resolution=ignore-duplicates,return=minimal'});await post('rules',rules);await post('transactions',tx);await load();alert('Importação concluída.')});
+if(ses)load().catch(()=>{ses=null;draw()});else draw();
+</script></body></html>
