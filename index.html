@@ -58,17 +58,23 @@ button:focus-visible,input:focus-visible,select:focus-visible,summary:focus-visi
 @media(prefers-reduced-motion:reduce){*{transition:none!important}}
 .tk.b{height:10px}.bl{margin-top:10px}.lg{padding:6px 0 0}.dot{display:inline-block;width:10px;height:10px;border-radius:50%;margin-right:8px}
 .rs{display:grid;justify-items:center;padding:6px 0 4px}
-.cm{display:flex;gap:10px;height:170px;overflow-x:auto}
-.col{flex:1;min-width:46px;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;height:100%}
+.cm{display:flex;gap:10px;height:190px;overflow-x:auto}
+.col{flex:1;min-width:64px;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;height:100%}
 .pair{display:flex;align-items:flex-end;gap:3px;height:calc(100% - 22px)}
 .pair i{display:block;width:14px;border-radius:6px 6px 0 0;min-height:2px}
 .pair i.pj{width:22px;background:repeating-linear-gradient(45deg,var(--r),var(--r) 4px,transparent 4px,transparent 8px);border:1.5px dashed var(--r);border-bottom:0}
+.pc{display:flex;flex-direction:column;align-items:center;justify-content:flex-end;height:calc(100% - 22px)}
+.pc i{display:block;width:28px;border-radius:7px 7px 0 0;min-height:2px}
+.pc i.pv{opacity:.55;border:1.5px dashed var(--tx);border-bottom:0}
+.vl{font-size:11px;color:var(--mu);margin-bottom:3px}
+.cn{font-size:11px;color:var(--mu);max-width:62px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;margin-top:4px}
 .lgd{display:flex;gap:14px;flex-wrap:wrap;font-size:13px;color:var(--mu);margin:10px 0 6px}
 .aviso{background:color-mix(in srgb,var(--y) 16%,transparent);border-radius:16px;padding:12px 14px;font-size:14px}
-.pjn{margin:4px 0;font-size:32px;font-weight:800;letter-spacing:-.03em}
+.mes .pj{background:none;border:1.5px dashed rgba(255,255,255,.75)}.mes .pj.on{background:#fff;color:var(--hero);border-style:solid}
+.prow{display:flex;align-items:center;gap:12px;padding:13px 0;border-bottom:1px solid var(--ln)}.prow:last-child{border:0}
 </style></head><body><div id="app"></div>
 <script>
-const U="https://zlrdsnvlleepwayzplew.supabase.co",K="sb_publishable_O-DwXkj7JC-jghFFO8OqIw_FziUuJjm";
+const U="https://zlrdsnvlleepwayzplew.supabase.co",K="COLE_AQUI_A_PUBLISHABLE_KEY";
 const $=s=>document.querySelector(s),
 esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c])),
 br=t=>new Date(t).toLocaleString('sv-SE',{timeZone:'America/Sao_Paulo'}),
@@ -79,7 +85,7 @@ iso=s=>new Date(s.trim().replace(' ','T')+':00-03:00').toISOString(),
 mk=t=>br(t.occurred_at).slice(0,7),now=()=>br(new Date()).slice(0,7),
 nm=k=>{const[y,m]=k.split('-');return['jan','fev','mar','abr','mai','jun','jul','ago','set','out','nov','dez'][m-1]+' '+y};
 let ses=null;try{ses=JSON.parse(localStorage.getItem('fx'))}catch(e){}
-const S={tx:[],cats:[],rules:[],tab:'r',month:now(),f:0,edit:null};
+const S={tx:[],cats:[],rules:[],tab:'r',month:now(),f:0,edit:null,np:Math.min(6,Math.max(1,+localStorage.getItem('fxn')||1))};
 function save(j){ses={at:j.access_token,rt:j.refresh_token,exp:j.expires_at||Math.floor(Date.now()/1e3)+j.expires_in};localStorage.setItem('fx',JSON.stringify(ses))}
 async function tok(){if(!ses)return null;if(ses.exp-60<Date.now()/1e3){const r=await fetch(U+'/auth/v1/token?grant_type=refresh_token',{method:'POST',headers:{apikey:K,'Content-Type':'application/json'},body:JSON.stringify({refresh_token:ses.rt})});if(!r.ok){ses=null;localStorage.removeItem('fx');return null}save(await r.json())}return ses.at}
 async function api(p,o={}){const t=await tok();if(!t)throw new Error('Faça login novamente.');const r=await fetch(U+'/rest/v1/'+p,{...o,headers:{apikey:K,Authorization:'Bearer '+t,'Content-Type':'application/json',Prefer:'return=minimal',...(o.headers||{})}});const x=await r.text();if(!r.ok)throw new Error(x);return x?JSON.parse(x):null}
@@ -91,11 +97,11 @@ function cls(t){const n=clean(t.name),a=Number(t.amount),d=br(t.occurred_at).sli
 function calc(){const m={};for(const t of S.tx){const o=m[mk(t)]??={e:0,s:0,g:0},v=Number(t.amount);if(t.type=='entrada')o.e+=v;else if(t.type=='saida')o.s+=v;else o.g+=v}return m}
 
 const hue=n=>[...n].reduce((h,x)=>(h*31+x.charCodeAt(0))%360,7),W=(v,x='')=>`data-w="${v}" style="width:${v}%;${x}"`;
-const hd=()=>`<div class="mes">${[...new Set([now(),S.month,...S.tx.map(mk)])].sort().reverse().map(k=>`<button class="${k==S.month?'on':''}" onclick="S.month='${k}';draw()">${nm(k)}</button>`).join('')}</div>`;
+const hd=()=>`<div class="mes">${[...new Set([now(),S.month,...S.tx.map(mk),...proj().keys])].sort().reverse().map(k=>`<button class="${k>now()?'pj ':''}${k==S.month?'on':''}" onclick="S.month='${k}';draw()">${nm(k)}${k>now()?' · prev.':''}</button>`).join('')}</div>`;
 const ic={g:'<path d="M5 20V10M12 20V4M19 20v-7"/>',r:'<rect x="4" y="4" width="7" height="7" rx="2"/><rect x="13" y="4" width="7" height="7" rx="2"/><rect x="4" y="13" width="7" height="7" rx="2"/><rect x="13" y="13" width="7" height="7" rx="2"/>',t:'<path d="M5 7h14M5 12h14M5 17h9"/>',c:'<path d="M4 8h8M17 8h3M4 16h3M12 16h8"/><circle cx="14.5" cy="8" r="2.5"/><circle cx="9.5" cy="16" r="2.5"/>'};
 const bar=()=>`<nav>${[['r','Resumo'],['t','Transações'],['g','Gráficos'],['c','Config']].map(([k,l])=>`<button class="${S.tab==k?'on':''}" onclick="S.tab='${k}';S.f=0;draw()"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true">${ic[k]}</svg><span>${l}</span></button>`).join('')}</nav>`;
 const loginH=()=>`<div class="hero"><h1>Fluxen</h1></div><div class="sheet"><div class="c2"><input id="em" type="email" placeholder="E-mail" autocomplete="username"><input id="pw" type="password" placeholder="Senha" autocomplete="current-password"><button class="pri" onclick="login()">Entrar</button><p class="m" id="er"></p></div></div>`;
-function resumo(){const m=calc(),k=S.month,o=m[k]||{e:0,s:0,g:0},sal=o.e-o.s,fe=k<now();let gt=0;for(const x in m){gt+=m[x].g;if(x<now())gt+=m[x].e-m[x].s}
+function resumo(){if(S.month>now())return resumoP();const m=calc(),k=S.month,o=m[k]||{e:0,s:0,g:0},sal=o.e-o.s,fe=k<now();let gt=0;for(const x in m){gt+=m[x].g;if(x<now())gt+=m[x].e-m[x].s}
 const cat={};let sem=0;for(const t of S.tx)if(mk(t)==k&&t.type=='saida'){const c=cls(t),a=c?c[0]:'Sem categoria',b=c?c[1]:'—',v=+t.amount;const x=cat[a]??={v:0,s:{}};x.v+=v;x.s[b]=(x.s[b]||0)+v;if(!c)sem++}
 const lista=Object.entries(cat).sort((a,b)=>b[1].v-a[1].v).map(([n,c])=>{const col=`hsl(${hue(n)} 55% 45%)`;return `<details><summary><span class="bd" style="background:${col}">${esc(n[0])}</span><span class="gr"><b>${esc(n)}</b><span class="tk"><i ${W(c.v/o.s*100,'background:'+col)}></i></span></span><b>${R(c.v)}</b></summary>${Object.entries(c.s).sort((a,b)=>b[1]-a[1]).map(([s,v])=>`<div class="sub"><span>${esc(s)}</span><span>${R(v)}</span></div>`).join('')}</details>`}).join('')||'<p class="m" style="padding:14px 0">Nenhum gasto neste mês.</p>';
 const pc=o.e>0?Math.min(100,o.s/o.e*100):(o.s>0?100:0);
@@ -103,42 +109,39 @@ return `<div class="hero ${sal<0?'neg':''}">${hd()}<p class="lb">Saldo de ${nm(k
 <div class="stats"><div><small>Guardado no mês</small><b class="${fe&&sal<0?'r':'y'}">${fe?R(sal):'A definir'}</b></div><div><small>Guardado no total</small><b class="y">${R(gt)}</b></div></div>
 <div class="sheet">${sem?`<button class="warn" onclick="S.tab='t';S.f=1;draw()">${sem} ${sem>1?'transações sem categoria':'transação sem categoria'}. Classificar agora</button>`:''}<h3>Gastos por categoria</h3><div class="lst">${lista}</div></div>`}
 const row=t=>{const s=t.type=='saida',c=s?cls(t):null,col=c?`hsl(${hue(c[0])} 55% 45%)`:'var(--mu)';return `<div class="row2" onclick="ed(${t.id})"><span class="bd" style="background:${col}">${esc((c?c[0]:clean(t.name))[0]||'?')}</span><div class="nm"><b>${esc(clean(t.name))}</b><small>${s?(c?esc(c[0]+' › '+c[1]):'<span class="tg">Sem categoria</span>'):t.type}</small></div><div class="rt"><b class="${s?'r':t.type=='entrada'?'g':'y'}">${s?'−':''}${R(t.amount)}</b><small>${br(t.occurred_at).slice(11,16)}</small></div></div>`};
-function trans(){const l=S.tx.filter(t=>mk(t)==S.month).sort((a,b)=>b.occurred_at.localeCompare(a.occurred_at)).filter(t=>!S.f||(t.type=='saida'&&!cls(t)));let h='',d='';for(const t of l){const k=br(t.occurred_at).slice(0,10);if(k!=d){d=k;h+=`<h4 class="dia">${+k.slice(8)} de ${nm(k.slice(0,7)).slice(0,3)}</h4>`}h+=row(t)}return `<div class="hero">${hd()}<h2>Transações</h2></div><div class="sheet"><label class="chip"><input type="checkbox" ${S.f?'checked':''} onchange="S.f=this.checked;draw()"> Só sem categoria</label>${h||'<p class="m">Nenhuma transação neste mês.</p>'}</div>`}
+function trans(){if(S.month>now())return `<div class="hero">${hd()}<h2>Transações</h2></div><div class="sheet"><p class="m">${nm(S.month)} é um mês previsto: ainda não há transações.</p></div>`;const l=S.tx.filter(t=>mk(t)==S.month).sort((a,b)=>b.occurred_at.localeCompare(a.occurred_at)).filter(t=>!S.f||(t.type=='saida'&&!cls(t)));let h='',d='';for(const t of l){const k=br(t.occurred_at).slice(0,10);if(k!=d){d=k;h+=`<h4 class="dia">${+k.slice(8)} de ${nm(k.slice(0,7)).slice(0,3)}</h4>`}h+=row(t)}return `<div class="hero">${hd()}<h2>Transações</h2></div><div class="sheet"><label class="chip"><input type="checkbox" ${S.f?'checked':''} onchange="S.f=this.checked;draw()"> Só sem categoria</label>${h||'<p class="m">Nenhuma transação neste mês.</p>'}</div>`}
 function conf(){return `<div class="hero"><h2>Configurações</h2></div><div class="sheet">
 <div class="c2"><h3>Nova categoria</h3><input id="nc" placeholder="Categoria"><input id="ns" placeholder="Subcategoria (Geral se não tiver)"><button class="pri" onclick="addC()">Criar</button><p class="m">${esc([...new Set(S.cats.map(c=>c.category))].join(', ')||'Nenhuma ainda.')}</p></div>
 <div class="c2"><h3>Lançamento manual</h3><select id="mt"><option value="saida">Saída</option><option value="entrada">Entrada</option><option value="guardado">Guardado</option></select><input id="mv" inputmode="decimal" placeholder="Valor (ex.: 150,00)"><input id="mn" placeholder="Nome ou descrição"><button class="pri" onclick="addM()">Lançar</button></div>
 <div class="c2"><h3>Regras (${S.rules.length})</h3>${S.rules.map(r=>`<div class="row2"><small>${esc(r.name)}${r.amount!=null?' · '+R(r.amount):''}${r.occurred_at?' · '+br(r.occurred_at).slice(0,10):''} → ${esc(r.category+' › '+r.subcategory)}</small><button onclick="delR(${r.id})">×</button></div>`).join('')||'<p class="m">Nenhuma ainda.</p>'}</div>
+<div class="c2"><h3>Meses de previsão</h3><select onchange="setNp(this.value)">${[1,2,3,4,5,6].map(n=>`<option ${n==S.np?'selected':''}>${n}</option>`).join('')}</select><p class="m">Quantos meses à frente aparecem como previsão nas abas do topo (mínimo 1). A previsão é a média dos meses fechados, por isso todos os meses previstos têm o mesmo valor.</p></div>
 <div class="c2"><h3>Importar histórico</h3><p class="m">Escolha transacoes.txt, categorias.txt e opcoes.txt de uma vez. Faça isso uma única vez.</p><input type="file" id="fi" multiple><button class="pri" onclick="imp()">Importar</button></div>
 <button onclick="out()">Sair</button></div>`}
 const catMes=k=>{const c={};for(const t of S.tx)if(mk(t)==k&&t.type=='saida'){const x=cls(t),a=x?x[0]:'Sem categoria';c[a]=(c[a]||0)+Number(t.amount)}return c};
 const soma=o=>Object.values(o).reduce((s,v)=>s+v,0);
-function proj(){const n0=now(),[y,m]=n0.split('-').map(Number),dia=+br(new Date()).slice(8,10),dim=new Date(y,m,0).getDate(),w=dia/dim,
-nk=m==12?(y+1)+'-01':y+'-'+String(m+1).padStart(2,'0'),
-ms=[...new Set(S.tx.filter(t=>t.type=='saida').map(mk))].filter(k=>k<n0),cur=catMes(n0),med={};
+const nxt=(k,i)=>{let[y,m]=k.split('-').map(Number);m+=i;y+=Math.floor((m-1)/12);m=(m-1)%12+1;return y+'-'+String(m).padStart(2,'0')};
+const setNp=v=>{S.np=+v;try{localStorage.setItem('fxn',v)}catch(e){}draw()};
+function proj(){const n0=now(),ms=[...new Set(S.tx.filter(t=>t.type=='saida').map(mk))].filter(k=>k<n0),med={};
 for(const k of ms){const c=catMes(k);for(const a in c)med[a]=(med[a]||0)+c[a]/ms.length}
-const p={};for(const a of new Set([...Object.keys(cur),...Object.keys(med)])){const ritmo=(cur[a]||0)/dia*dim;p[a]=ms.length?w*ritmo+(1-w)*(med[a]||0):ritmo}
-return{p,ms:ms.length,dia,dim,cur,med,nk,total:soma(p)}}
+return{p:med,ms:ms.length,total:soma(med),keys:ms.length?Array.from({length:S.np},(_,i)=>nxt(n0,i+1)):[]}}
+const avP=P=>P.ms<3?`<div class="aviso">Previsão baseada na média de ${P.ms} ${P.ms>1?'meses fechados':'mês fechado'}. Com poucos meses ela tende a ficar abaixo do gasto real, principalmente se o primeiro mês começou no meio. Ela melhora a cada mês que fecha.</div>`:'';
+function resumoP(){const P=proj(),k=S.month,rows=Object.entries(P.p).sort((a,b)=>b[1]-a[1]).map(([n,v])=>{const col=`hsl(${hue(n)} 55% 45%)`;return `<div class="prow"><span class="bd" style="background:${col}">${esc(n[0])}</span><span class="gr"><b>${esc(n)}</b><span class="tk"><i ${W(v/P.total*100,'background:'+col)}></i></span></span><b>${R(v)}</b></div>`}).join('');
+return `<div class="hero">${hd()}<p class="lb">Gasto previsto de ${nm(k)}</p><h1 class="big">${R(P.total)}</h1><p style="margin:-10px 0 0;opacity:.9;font-size:14px">Média de ${P.ms} ${P.ms>1?'meses fechados':'mês fechado'}</p></div><div class="sheet">${avP(P)}<h3>Previsto por categoria</h3><div class="lst">${rows||'<p class="m" style="padding:14px 0">Sem dados para prever.</p>'}</div></div>`}
 function graf(){
-const k=S.month,c=catMes(k),tot=soma(c),ents=Object.entries(c).sort((a,b)=>b[1]-a[1]),mx=ents.length?ents[0][1]:1,col=n=>`hsl(${hue(n)} 55% 45%)`;
+const k=S.month,P=proj(),fut=k>now(),c=fut?P.p:catMes(k),tot=soma(c),ents=Object.entries(c).sort((a,b)=>b[1]-a[1]),mx=ents.length?ents[0][1]:1,col=n=>`hsl(${hue(n)} 55% 45%)`,sf=fut?' (previsão)':'';
 const r=52,C=2*Math.PI*r;let off=0;
 const rosca=`<svg viewBox="0 0 140 140" width="190" height="190" role="img" aria-label="Divisão dos gastos por categoria">${ents.map(([n,v])=>{const l=v/tot*C,s=`<circle cx="70" cy="70" r="${r}" fill="none" stroke="${col(n)}" stroke-width="22" stroke-dasharray="${l} ${C-l}" stroke-dashoffset="${-off}" transform="rotate(-90 70 70)"/>`;off+=l;return s}).join('')}<text x="70" y="66" text-anchor="middle" font-size="10" fill="var(--mu)">Gasto</text><text x="70" y="82" text-anchor="middle" font-size="12" font-weight="800" fill="var(--tx)">${R(tot)}</text></svg>`;
 const leg=ents.map(([n,v])=>`<div class="sub lg"><span><i class="dot" style="background:${col(n)}"></i>${esc(n)}</span><span>${(v/tot*100).toFixed(0)}%</span></div>`).join('');
-const barras=ents.map(([n,v])=>`<div class="bl"><div class="sub lg"><span>${esc(n)}</span><b>${R(v)}</b></div><span class="tk b"><i ${W(v/mx*100,'background:'+col(n))}></i></span></div>`).join('');
-const P=proj(),cm=calc(),meses=Object.keys(cm).sort().slice(-5),mxv=Math.max(1,P.total,...meses.map(x=>Math.max(cm[x].e,cm[x].s))),h=v=>(v/mxv*100).toFixed(1);
-const cols=meses.map(x=>`<div class="col"><div class="pair"><i style="height:${h(cm[x].e)}%;background:var(--g)"></i><i style="height:${h(cm[x].s)}%;background:var(--r)"></i></div><small>${nm(x).slice(0,3)}</small></div>`).join('')+`<div class="col"><div class="pair"><i class="pj" style="height:${h(P.total)}%"></i></div><small>${nm(P.nk).slice(0,3)}*</small></div>`;
-const tab=meses.map(x=>`<div class="sub lg"><span>${nm(x)}</span><span>${R(cm[x].e)} · ${R(cm[x].s)}</span></div>`).join('')+`<div class="sub lg"><span>${nm(P.nk)} (projeção)</span><span>${R(P.total)}</span></div>`;
-const pe=Object.entries(P.p).sort((a,b)=>b[1]-a[1]),pm=pe.length?pe[0][1]:1;
-const pl=pe.map(([n,v])=>`<div class="bl"><div class="sub lg"><span>${esc(n)} <small style="display:inline">· até agora ${R(P.cur[n]||0)}</small></span><b>${R(v)}</b></div><span class="tk b"><i ${W(v/pm*100,'background:'+col(n))}></i></span></div>`).join('');
-const av=P.ms==0?`Ainda não há mês fechado: a projeção usa só o ritmo de gasto do mês atual (${P.dia} ${P.dia>1?'dias':'dia'} de dados).`:P.ms<3?`Poucos dados: a projeção usa ${P.ms} ${P.ms>1?'meses fechados':'mês fechado'} e o ritmo do mês atual. O primeiro mês começou no meio, o que pode puxar a média para baixo. Ela fica mais confiável a cada mês que fecha.`:'';
+const bars=ents.map(([n,v])=>`<div class="col"><div class="pc"><span class="vl">${Math.round(v).toLocaleString('pt-BR')}</span><i class="${fut?'pv':''}" style="height:${(v/mx*82).toFixed(1)}%;background:${col(n)}"></i></div><span class="cn">${esc(n)}</span></div>`).join('');
+const cm=calc(),meses=Object.keys(cm).filter(x=>x<=now()).sort().slice(-5),mxv=Math.max(1,P.total,...meses.map(x=>Math.max(cm[x].e,cm[x].s))),h=v=>(v/mxv*100).toFixed(1);
+const cols=meses.map(x=>`<div class="col"><div class="pair"><i style="height:${h(cm[x].e)}%;background:var(--g)"></i><i style="height:${h(cm[x].s)}%;background:var(--r)"></i></div><small>${nm(x).slice(0,3)}</small></div>`).join('')+P.keys.map(x=>`<div class="col"><div class="pair"><i class="pj" style="height:${h(P.total)}%"></i></div><small>${nm(x).slice(0,3)}*</small></div>`).join('');
+const tab=meses.map(x=>`<div class="sub lg"><span>${nm(x)}</span><span>${R(cm[x].e)} · ${R(cm[x].s)}</span></div>`).join('')+P.keys.map(x=>`<div class="sub lg"><span>${nm(x)} (previsão)</span><span>${R(P.total)}</span></div>`).join('');
 return `<div class="hero">${hd()}<h2>Gráficos</h2></div><div class="sheet">
-<div class="c2"><h3>Divisão de ${nm(k)}</h3>${tot?`<div class="rs">${rosca}</div>${leg}`:'<p class="m">Nenhum gasto neste mês.</p>'}</div>
-<div class="c2"><h3>Gasto por categoria</h3>${barras||'<p class="m">Nenhum gasto neste mês.</p>'}</div>
-<div class="c2"><h3>Comparativo entre meses</h3><div class="cm">${cols}</div><div class="lgd"><span><i class="dot" style="background:var(--g)"></i>Recebido</span><span><i class="dot" style="background:var(--r)"></i>Gasto</span><span>* projeção</span></div>${tab}</div>
-<h3>Projeção de ${nm(P.nk)}</h3>${av?`<div class="aviso">${av}</div>`:''}
-<div class="c2"><small>Gasto previsto</small><h2 class="pjn">${R(P.total)}</h2><p class="m">Média dos meses fechados: ${P.ms?R(soma(P.med)):'—'} · Ritmo de ${nm(now())}: ${R(soma(P.cur)/P.dia*P.dim)}</p></div>
-<div class="c2"><h3>Previsto por categoria</h3>${pl||'<p class="m">Sem dados para projetar.</p>'}</div></div>`}
+<div class="c2"><h3>Divisão de ${nm(k)}${sf}</h3>${tot?`<div class="rs">${rosca}</div>${leg}`:'<p class="m">Nenhum gasto neste mês.</p>'}</div>
+<div class="c2"><h3>Gasto por categoria${sf}</h3>${ents.length?`<div class="cm">${bars}</div><p class="m">Valores em reais.</p>`:'<p class="m">Nenhum gasto neste mês.</p>'}</div>
+<div class="c2"><h3>Comparativo entre meses</h3><div class="cm">${cols}</div><div class="lgd"><span><i class="dot" style="background:var(--g)"></i>Recebido</span><span><i class="dot" style="background:var(--r)"></i>Gasto</span>${P.keys.length?'<span>* previsão (média dos meses fechados)</span>':''}</div>${tab}</div></div>`}
 function sheet(){const t=S.edit,s=t.type=='saida';return `<div class="ov" onclick="if(event.target==this){S.edit=null;draw()}"><div class="md"><h3>${esc(clean(t.name))}</h3><p class="m">${R(t.amount)} · ${br(t.occurred_at).slice(0,16)}</p>${s?`<label>Categoria<select id="ec">${S.cats.map((c,i)=>`<option value="${i}">${esc(c.category+' › '+c.subcategory)}</option>`).join('')}</select></label><label>Vale para<select id="es"><option value="0">Todas as compras deste nome</option><option value="1">Este nome com este valor</option><option value="2">Só esta transação</option></select></label><button class="pri" onclick="saveR()">Salvar classificação</button>`:''}<button class="del" onclick="delT()">Apagar lançamento</button><button onclick="S.edit=null;draw()">Fechar</button></div></div>`}
-function draw(){const a=$('#app');if(!ses){a.innerHTML=loginH();return}const key=S.tab+S.month,first=key!=S.k;S.k=key;a.innerHTML=({r:resumo,t:trans,g:graf,c:conf})[S.tab]()+bar()+(S.edit?sheet():'');if(first){const w=a.querySelectorAll('[data-w]');w.forEach(e=>e.style.width='0');requestAnimationFrame(()=>requestAnimationFrame(()=>w.forEach(e=>e.style.width=e.dataset.w+'%')))}}
+function draw(){const a=$('#app');if(!ses){a.innerHTML=loginH();return}if(S.month>now()&&!proj().keys.includes(S.month))S.month=now();const key=S.tab+S.month,first=key!=S.k;S.k=key;a.innerHTML=({r:resumo,t:trans,g:graf,c:conf})[S.tab]()+bar()+(S.edit?sheet():'');if(first){const w=a.querySelectorAll('[data-w]');w.forEach(e=>e.style.width='0');requestAnimationFrame(()=>requestAnimationFrame(()=>w.forEach(e=>e.style.width=e.dataset.w+'%')))}}
 const ed=id=>{S.edit=S.tx.find(t=>t.id==id);draw()};
 const run=async f=>{try{await f()}catch(e){alert(e.message)}};
 const saveR=()=>run(async()=>{const t=S.edit,c=S.cats[$('#ec').value],e=+$('#es').value;if(!c)return alert('Crie uma categoria antes, em Config.');
